@@ -1,0 +1,44 @@
+@namespace MessageBroker.Frontend
+@page "/"
+@inject BrokerClient Client
+@inject VersionInfo Version
+
+<h1>C# Message Broker / Distributed App Framework</h1>
+<p><strong>Branch:</strong> @Version.Branch</p>
+<p><strong>Frontend .NET:</strong> @Version.FrontendDotnet</p>
+<p><strong>Backend .NET:</strong> @Version.BackendDotnet</p>
+
+<section>
+  <h2>Broker Dashboard</h2>
+  <label>Message Id <input @bind="messageId" /></label>
+  <label>Topic <input @bind="topic" /></label>
+  <label>Payload <input @bind="payload" /></label>
+  <div>
+    <button @onclick="Publish">Publish</button>
+    <button @onclick="Consume">Consume</button>
+    <button @onclick="Ack">Ack/Delete</button>
+    <button @onclick="LoadStats">Stats</button>
+  </div>
+</section>
+<section>
+  <h2>Status</h2>
+  <p>@status</p>
+  @if (!string.IsNullOrEmpty(Client.LastError)) { <p style="color:darkred">@Client.LastError</p> }
+  else if (Client.LastEntry is not null) { <p style="color:darkgreen">Last result accepted</p> }
+  <pre>@json</pre>
+  <pre>@statsJson</pre>
+</section>
+
+@code {
+    private string messageId = "order:1001";
+    private string topic = "orders.created";
+    private string payload = "Visvantha";
+    private string status = "Ready";
+    private string json = "{}";
+    private string statsJson = "{}";
+    protected override void OnInitialized() => Client.StateChanged += () => InvokeAsync(StateHasChanged);
+    private async Task Publish() { var r = await Client.PublishAsync(messageId, topic, payload); status = r?.Message ?? "fail"; json = System.Text.Json.JsonSerializer.Serialize(r); }
+    private async Task Consume() { var r = await Client.ConsumeAsync(topic); status = r?.Message ?? "fail"; json = System.Text.Json.JsonSerializer.Serialize(r); }
+    private async Task Ack() { var r = await Client.AckAsync(messageId); status = r?.Message ?? "fail"; json = System.Text.Json.JsonSerializer.Serialize(r); }
+    private async Task LoadStats() { statsJson = System.Text.Json.JsonSerializer.Serialize(await Client.StatsAsync()); status = "Stats loaded"; }
+}

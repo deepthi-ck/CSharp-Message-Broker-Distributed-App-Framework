@@ -1,0 +1,6 @@
+{
+  "messageTtlSeconds": 300,
+  "maxMessages": 64,
+  "nodeSlotCount": 3,
+  "apiBaseUrl": "http://localhost:5082"
+}

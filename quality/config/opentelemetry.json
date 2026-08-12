@@ -1,0 +1,1 @@
+{ "service_name": "csharp-message-broker", "validate_endpoint": "http://localhost:5082/health" }

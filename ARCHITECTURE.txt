@@ -1,0 +1,16 @@
+C# MESSAGE BROKER / DISTRIBUTED APP FRAMEWORK
+=============================================
+
+Runtime flow:
+  USER -> Broker Dashboard -> Broker API -> BrokerService -> BrokerManager
+       -> PartitionRouter -> BrokerNode -> InMemoryMessageStore
+       -> ReplicationManager -> Response -> Frontend -> USER
+
+Canonical modules:
+  shared/        MessageEntry, requests/responses, VersionInfo
+  broker/        InMemoryMessageStore, policy, statistics
+  distribution/  BrokerNode, PartitionRouter, ReplicationManager, NodeRegistry
+  backend_csharp/ API + orchestration + OutboxInboxGuard (compiles broker+distribution)
+  frontend_csharp/ Publisher/subscriber client only
+
+Conceptual inspiration only (no clone): food-delivery-microservices messaging ideas.

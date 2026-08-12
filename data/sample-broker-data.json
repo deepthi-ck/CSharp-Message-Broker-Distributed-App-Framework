@@ -1,0 +1,7 @@
+{
+  "seed_messages": [
+    { "messageId": "order:1001", "topic": "orders.created", "payload": "Visvantha" },
+    { "messageId": "product:2001", "topic": "catalog.updated", "payload": "SKU-2001" },
+    { "messageId": "customer:3001", "topic": "customers.registered", "payload": "guest01" }
+  ]
+}

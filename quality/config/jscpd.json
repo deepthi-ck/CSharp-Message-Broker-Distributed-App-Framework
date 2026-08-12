@@ -1,0 +1,1 @@
+{ "threshold": 10, "reporters": ["json", "console"], "ignore": ["**/bin/**", "**/obj/**", "**/quality/reports/**"] }

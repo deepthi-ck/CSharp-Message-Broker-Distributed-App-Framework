@@ -1,0 +1,5 @@
+{
+  "publish": { "messageId": "order:1001", "topic": "orders.created", "payload": "Visvantha" },
+  "consume": { "topic": "orders.created" },
+  "ack": { "messageId": "order:1001" }
+}

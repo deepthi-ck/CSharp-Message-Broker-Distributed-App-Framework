@@ -1,0 +1,8 @@
+rules:
+  - id: csharp-empty-catch
+    languages: [csharp]
+    message: Avoid empty catch blocks
+    severity: WARNING
+    pattern: |
+      catch ($) { }
+

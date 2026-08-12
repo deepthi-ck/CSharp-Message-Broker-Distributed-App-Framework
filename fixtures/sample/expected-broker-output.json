@@ -1,0 +1,6 @@
+{
+  "publish": { "success": true, "messageContains": "PUBLISH = SUCCESS" },
+  "consume": { "success": true, "payload": "Visvantha" },
+  "ack": { "success": true, "status": "ACKED" },
+  "consumeAfterAck": { "success": false, "status": "EMPTY" }
+}

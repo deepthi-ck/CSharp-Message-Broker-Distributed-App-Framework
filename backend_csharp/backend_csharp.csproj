@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>$(BackendTargetFramework)</TargetFramework>
+    <RootNamespace>MessageBroker.Backend</RootNamespace>
+    <AssemblyName>backend_csharp</AssemblyName>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="src\**\*.cs" />
+    <Compile Include="..\broker\**\*.cs" Link="broker\%(Filename)%(Extension)" />
+    <Compile Include="..\distribution\**\*.cs" Link="distribution\%(Filename)%(Extension)" />
+  </ItemGroup>
+  <ItemGroup><ProjectReference Include="..\shared\shared.csproj" /></ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="OpenTelemetry.Extensions.Hosting" Version="1.9.0" />
+    <PackageReference Include="OpenTelemetry.Exporter.Console" Version="1.9.0" />
+    <PackageReference Include="OpenTelemetry.Instrumentation.AspNetCore" Version="1.9.0" />
+  </ItemGroup>
+</Project>
