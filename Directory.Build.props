@@ -1,12 +1,12 @@
-<Project>
+﻿<Project>
   <PropertyGroup>
-    <!-- Branch: CSharp_FE6_BE8 — FE=.NET 6, BE=.NET 8. Do not swap or equalize. -->
-    <FrontendTargetFramework>net6.0</FrontendTargetFramework>
-    <BackendTargetFramework>net8.0</BackendTargetFramework>
-    <FrontendDotnetVersion>6</FrontendDotnetVersion>
-    <BackendDotnetVersion>8</BackendDotnetVersion>
-    <BranchName>CSharp_FE6_BE8</BranchName>
-    <SharedTargetFrameworks>net6.0;net8.0</SharedTargetFrameworks>
+    <!-- Branch: CSharp_FE8_BE9 — FE=.NET 8, BE=.NET 9. Do not swap or equalize. -->
+    <FrontendTargetFramework>net8.0</FrontendTargetFramework>
+    <BackendTargetFramework>net9.0</BackendTargetFramework>
+    <FrontendDotnetVersion>8</FrontendDotnetVersion>
+    <BackendDotnetVersion>9</BackendDotnetVersion>
+    <BranchName>CSharp_FE8_BE9</BranchName>
+    <SharedTargetFrameworks>net8.0;net9.0</SharedTargetFrameworks>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
