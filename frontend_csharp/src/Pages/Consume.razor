@@ -1,0 +1,43 @@
+@page "/consume"
+@namespace MessageBroker.Frontend
+@inject BrokerClient Client
+
+<section class="panel">
+    <h1>Consume</h1>
+    <p class="lead">Consume the next message for a topic via <code>GET /broker/consume/{topic}</code>.</p>
+
+    <div class="form-grid">
+        <label>Topic
+            <input @bind="topic" placeholder="orders.created" autocomplete="off" />
+        </label>
+        <label class="checkbox">
+            <input type="checkbox" @bind="preferReplica" /> Prefer replica
+        </label>
+    </div>
+
+    <div class="actions">
+        <button type="button" @onclick="ConsumeAsync">Consume message</button>
+    </div>
+
+    <p class="status">@status</p>
+    @if (!string.IsNullOrEmpty(Client.LastError)) { <p class="error">@Client.LastError</p> }
+    else if (Client.LastEntry is not null) { <p class="ok">Message received</p> }
+    <pre class="result">@resultJson</pre>
+</section>
+
+@code {
+    private string topic = string.Empty;
+    private bool preferReplica;
+    private string status = "Enter a topic, then consume.";
+    private string resultJson = "{}";
+
+    protected override void OnInitialized() => Client.StateChanged += () => InvokeAsync(StateHasChanged);
+
+    private async Task ConsumeAsync()
+    {
+        if (string.IsNullOrWhiteSpace(topic)) { status = "Topic is required."; return; }
+        var result = await Client.ConsumeAsync(topic.Trim(), preferReplica);
+        status = result?.Message ?? "Consume failed";
+        resultJson = System.Text.Json.JsonSerializer.Serialize(result, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+    }
+}
