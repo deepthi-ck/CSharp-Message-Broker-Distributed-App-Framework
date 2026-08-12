@@ -1,0 +1,38 @@
+@page "/stats"
+@namespace MessageBroker.Frontend
+@inject BrokerClient Client
+
+<section class="panel">
+    <h1>Stats</h1>
+    <p class="lead">Live broker statistics from <code>GET /broker/stats</code>.</p>
+
+    <div class="actions">
+        <button type="button" @onclick="LoadStatsAsync">Refresh stats</button>
+    </div>
+
+    <p class="status">@status</p>
+    @if (!string.IsNullOrEmpty(Client.LastError)) { <p class="error">@Client.LastError</p> }
+    <pre class="result">@statsJson</pre>
+</section>
+
+@code {
+    private string status = "Click Refresh stats to load.";
+    private string statsJson = "{}";
+
+    protected override async Task OnInitializedAsync() => await LoadStatsAsync();
+
+    private async Task LoadStatsAsync()
+    {
+        try
+        {
+            var stats = await Client.StatsAsync();
+            statsJson = System.Text.Json.JsonSerializer.Serialize(stats, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+            status = "Stats loaded";
+        }
+        catch (Exception ex)
+        {
+            status = "Failed to load stats";
+            statsJson = ex.Message;
+        }
+    }
+}

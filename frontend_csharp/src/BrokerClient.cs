@@ -18,15 +18,22 @@ public sealed class BrokerClient
         return await ReadAsync(response);
     }
 
-    public async Task<BrokerResponse?> ConsumeAsync(string topic)
+    public async Task<BrokerResponse?> ConsumeAsync(string topic, bool preferReplica = false)
     {
-        var response = await _http.GetAsync($"/broker/consume/{Uri.EscapeDataString(topic)}");
+        var q = preferReplica ? "?replica=true" : string.Empty;
+        var response = await _http.GetAsync($"/broker/consume/{Uri.EscapeDataString(topic)}{q}");
         return await ReadAsync(response);
     }
 
     public async Task<BrokerResponse?> AckAsync(string id)
     {
         var response = await _http.PostAsync($"/broker/ack/{Uri.EscapeDataString(id)}", null);
+        return await ReadAsync(response);
+    }
+
+    public async Task<BrokerResponse?> DeleteAsync(string id)
+    {
+        var response = await _http.DeleteAsync($"/broker/messages/{Uri.EscapeDataString(id)}");
         return await ReadAsync(response);
     }
 
