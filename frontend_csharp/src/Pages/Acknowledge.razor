@@ -1,0 +1,47 @@
+@page "/acknowledge"
+@namespace MessageBroker.Frontend
+@inject BrokerClient Client
+
+<section class="panel">
+    <h1>Acknowledge</h1>
+    <p class="lead">Acknowledge or delete a message by id (<code>POST /broker/ack/{id}</code>, <code>DELETE /broker/messages/{id}</code>).</p>
+
+    <div class="form-grid">
+        <label>Message id
+            <input @bind="messageId" placeholder="order:1001" autocomplete="off" />
+        </label>
+    </div>
+
+    <div class="actions">
+        <button type="button" @onclick="AckAsync">Acknowledge</button>
+        <button type="button" class="danger" @onclick="DeleteAsync">Delete message</button>
+    </div>
+
+    <p class="status">@status</p>
+    @if (!string.IsNullOrEmpty(Client.LastError)) { <p class="error">@Client.LastError</p> }
+    <pre class="result">@resultJson</pre>
+</section>
+
+@code {
+    private string messageId = string.Empty;
+    private string status = "Enter a message id, then acknowledge or delete.";
+    private string resultJson = "{}";
+
+    protected override void OnInitialized() => Client.StateChanged += () => InvokeAsync(StateHasChanged);
+
+    private async Task AckAsync()
+    {
+        if (string.IsNullOrWhiteSpace(messageId)) { status = "Message id is required."; return; }
+        var result = await Client.AckAsync(messageId.Trim());
+        status = result?.Message ?? "Acknowledge failed";
+        resultJson = System.Text.Json.JsonSerializer.Serialize(result, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+    }
+
+    private async Task DeleteAsync()
+    {
+        if (string.IsNullOrWhiteSpace(messageId)) { status = "Message id is required."; return; }
+        var result = await Client.DeleteAsync(messageId.Trim());
+        status = result?.Message ?? "Delete failed";
+        resultJson = System.Text.Json.JsonSerializer.Serialize(result, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+    }
+}
