@@ -1,0 +1,50 @@
+@page "/publish"
+@namespace MessageBroker.Frontend
+@inject BrokerClient Client
+
+<section class="panel">
+    <h1>Publish</h1>
+    <p class="lead">Publish a message to a topic via <code>POST /broker/publish</code>. Fields start empty — enter your own values.</p>
+
+    <div class="form-grid">
+        <label>Message id
+            <input @bind="messageId" placeholder="order:1001" autocomplete="off" />
+        </label>
+        <label>Topic
+            <input @bind="topic" placeholder="orders.created" autocomplete="off" />
+        </label>
+        <label>Payload
+            <input @bind="payload" placeholder="Enter message payload" autocomplete="off" />
+        </label>
+    </div>
+
+    <div class="actions">
+        <button type="button" @onclick="PublishAsync">Publish message</button>
+    </div>
+
+    <p class="status">@status</p>
+    @if (!string.IsNullOrEmpty(Client.LastError)) { <p class="error">@Client.LastError</p> }
+    else if (Client.LastEntry is not null) { <p class="ok">Last publish accepted</p> }
+    <pre class="result">@resultJson</pre>
+</section>
+
+@code {
+    private string messageId = string.Empty;
+    private string topic = string.Empty;
+    private string payload = string.Empty;
+    private string status = "Enter message id, topic, and payload, then publish.";
+    private string resultJson = "{}";
+
+    protected override void OnInitialized() => Client.StateChanged += () => InvokeAsync(StateHasChanged);
+
+    private async Task PublishAsync()
+    {
+        if (string.IsNullOrWhiteSpace(messageId)) { status = "Message id is required."; return; }
+        if (string.IsNullOrWhiteSpace(topic)) { status = "Topic is required."; return; }
+        if (string.IsNullOrWhiteSpace(payload)) { status = "Payload is required."; return; }
+
+        var result = await Client.PublishAsync(messageId.Trim(), topic.Trim(), payload.Trim());
+        status = result?.Message ?? "Publish failed";
+        resultJson = System.Text.Json.JsonSerializer.Serialize(result, new System.Text.Json.JsonSerializerOptions { WriteIndented = true });
+    }
+}
