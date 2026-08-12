@@ -1,0 +1,18 @@
+@namespace MessageBroker.Frontend
+@inherits LayoutComponentBase
+
+<div class="app-shell">
+    <header class="topbar">
+        <div class="brand">
+            <NavLink href="/" Match="NavLinkMatch.All">C# Message Broker</NavLink>
+            <span class="brand-sub">Distributed App Framework</span>
+        </div>
+        <NavMenu />
+    </header>
+    <main class="content">
+        @Body
+    </main>
+    <footer class="footer">
+        Blazor WebAssembly client · Broker API <code>http://localhost:5082</code>
+    </footer>
+</div>
